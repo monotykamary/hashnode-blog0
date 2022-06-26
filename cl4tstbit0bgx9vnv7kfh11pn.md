@@ -25,7 +25,7 @@ https://github.com/timescale/timescaledb/issues/1094
 https://github.com/timescale/timescaledb/pull/4405
 https://docs.timescale.com/timescaledb/latest/how-to-guides/write-data/upsert/#upsert-data
 
-The additional requirement for upserts in TimescaleDB requires us to create a unique constraint that includes the partitioning column (in this case our`time` column).
+The additional requirement for upserts in TimescaleDB requires us to create a unique constraint that includes the partitioning column (in this case our `time` column).
 
 ```sql
 /* https://docs.timescale.com/timescaledb/latest/how-to-guides/write-data/upsert/#create-a-table-with-a-unique-constraint */
@@ -85,7 +85,7 @@ Although, at first glance, it seems rather trivial to do an upsert. Our only qui
   - If the record does not exist:
     - INSERT the record with the updated fields
 
-Doing this on the application side, and even on the SQL side comes with some caveats. Similar to ad-hoc approaches in this article, we can't use this approach without considering strategies that prevent us from reaching concurrency issues or race conditions. You can see a handful mentioned in this article: https://www.depesz.com/2012/06/10/why-is-upsert-so-complicated/. The strategies mentioned there are inefficient (maybe except for advisory locks), don’t consider rollbacks, and have nuanced tradeoffs that we can’t afford to discover during production.
+Doing this on the application side, and even on the SQL side comes with some caveats. We can't use this approach without considering strategies that prevent us from reaching concurrency issues or race conditions. You can see a handful mentioned in this article: https://www.depesz.com/2012/06/10/why-is-upsert-so-complicated/. The strategies mentioned there are inefficient (maybe except for advisory locks), don’t consider rollbacks, and have nuanced tradeoffs that we can’t afford to discover during production.
 
 ## Further research
 
