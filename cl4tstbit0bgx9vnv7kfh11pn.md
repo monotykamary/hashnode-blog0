@@ -120,7 +120,7 @@ This is what it would look like in SQL:
 ```sql
 BEGIN;
 
-CREATE TEMPORARY TABLE staging_transaction_log (LIKE transaction_log EXCLUDING CONSTRAINTS) ON COMMIT DROP;
+CREATE TEMPORARY TABLE staging_transaction_log (LIKE transaction_log INCLUDING ALL) ON COMMIT DROP;
 
 LOCK TABLE transaction_log IN EXCLUSIVE MODE;
 
