@@ -59,6 +59,26 @@ Such that our transducer represents a type of Mealy machine that gives us a *lis
 
 > f : Config × Input → {Outputs}
 
+### Pseudocode for hierarchical state machines
+
+```haskell
+outerTransducer outerConfig input =
+    case (outerConfig.mode, input) of
+         ...
+         (ContainingMode, _) ->
+             let
+                 innerInput = obtainInnerInputFrom input outerConfig
+                 innerConfig = extractInnerConfigFrom outerConfig
+                 (innerConfig', innerOutputs) = innerTransducer innerConfig innerInput
+                 outerConfig' = embedInnerConfigIn outerConfig innerConfig'
+                 outerOutputs = obtainOuterOutputsFrom innerOutputs outerConfig'
+             in
+                 (outerConfig', outerOutputs)
+         ...
+```
+
+Our target implementation will be focusing on hierarchical state machines, as it is the more tricky part of statecharts. A lot of the examples in Chris's repository ends up with a bit of boilerplate for merging and transitioning configs and outputs. The good thing is that we can just throw this boilerplate into helper functions.
+
 ### Approach
 
 #### Example to work with
@@ -759,6 +779,8 @@ https://github.com/monotykamary/nested-modal-transducers-golang-implementation
 I've always found it very enjoying to redo stuff from pseudocode as it gives a bit of insight on what nuances exist for the language you do it on. Of course, this transducer style is being used in production to maintain basic consistency of a game we develop for a client, and it's been working great (excluding the experimental data generation parts).
 
 Having a list of effects is really just a checklist of what side-effects you need to do and exhaust on the list. Switch cases in Golang don't fallthrough by default, which makes it great for this use case. There were a few situations where refactoring logic to use transducers revealed a few actions and effects we were missing in our game logic.
+
+As for the extra stuff, I honestly wanted to try out what I could generate from the state machine. Having clear outputs as clearly defined structs makes this process much easier to work with.
 
 ### Things to be careful of
 
