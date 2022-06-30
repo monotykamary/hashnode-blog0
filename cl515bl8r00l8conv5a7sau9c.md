@@ -51,7 +51,7 @@ Before we implement this, we need to make sure what our transition(s) will look 
 - a transition function such that the next state is dependent on the initial state and its inputs; and
 - an output function such that the outputs are dependent on the initial state and its inputs
 
-In Chris's post, to make transducers more ergonomic, the signature for any given transducer becomes:
+In Chris's post, to make transducers more ergonomic, the signature for any given transducer is combined as one function:
 
 > f : State × Input → State × [Outputs]
 
