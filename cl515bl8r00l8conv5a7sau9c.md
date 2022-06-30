@@ -562,7 +562,7 @@ Our output DOT graph state machine would look something like this:
 
 #### Generating shortest paths
 
-This is totally taken from XState, but its also a good practice in traversing a state machine, which is essentially a graph. Initially, I wanted to implement this with Dijkstra algorithm, but I couldn't pronounce his name, so I switched to Floyd-Warshall instead:
+This is totally taken from XState, but its also a good practice in traversing a state machine, which is essentially a graph. Initially, I wanted to implement this with the Dijkstra algorithm, but I couldn't pronounce his name, so I switched to Floyd-Warshall instead:
 
 ```go
 // transducer/transducer.go
