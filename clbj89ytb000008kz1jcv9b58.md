@@ -273,8 +273,6 @@ We can check this by adding more consumers to our `index.js` file:
 
 ```javascript
 // index.js
-...
-
 (async () => {
   for await (const item of counterIter) {
     if (item.type === "VALUE") {
@@ -306,8 +304,6 @@ Our case simply requires a factory function that creates a unicast Subject that 
 
 ```javascript
 // subject.js
-...
-
 function multicast(asyncGenerator) {
     const consumers = [];
     (async () => {
@@ -375,8 +371,6 @@ And update our `index.js` to call the factory function to create the Subject as 
 
 ```javascript
 // index.js
-...
-
 const [
   counterState,
   counterDispatch,
