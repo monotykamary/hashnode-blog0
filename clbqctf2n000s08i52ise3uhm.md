@@ -70,7 +70,7 @@ The easiest way to burn out dataviews is with templater. Templater has a few fun
 
 For our example, we'll use our [Brainery's Latest Notes](https://brain.d.foundation/Latest+Notes) page. Here we integrate a bit of JavaScript inside \`&lt;%\* ... %&gt; Templater tags along with dataview queries to scaffold our template.
 
-```plaintext
+```javascript
 This is where we keep track of our top 10 latest Brainery notes:
 
 <%*
@@ -168,7 +168,7 @@ Here is a pretty crude flow-chart diagram of the actions to how this works. Esse
 
 For our latest notes, the frontmatter is as follows:
 
-```plaintext
+```yaml
 ---
 recurringTemplate: true
 recurringTemplateName: latest-notes
@@ -179,7 +179,7 @@ recurringTemplateName: latest-notes
 
 The one true script to automate refreshing recurring template static files is a pretty short one-page JavaScript script also written in Templater:
 
-```plaintext
+```javascript
 <%*
 const dv = this.app.plugins.plugins["dataview"].api;
 const recurringTemplatesList = dv.pages(`"_templates"`)
