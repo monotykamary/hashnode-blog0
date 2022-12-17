@@ -307,16 +307,23 @@ Our case simply requires a factory function that creates a unicast Subject that 
 function multicast(asyncGenerator) {
     const consumers = [];
     (async () => {
-        for await (const item of asyncGenerator) {
-            for (const [_, consumerPush] of consumers) {
-                consumerPush(item);
-            }
+	    try {
+		    for await (const item of asyncGenerator) {
+	            for (const [_, consumerPush] of consumers) {
+	                consumerPush(item);
+	            }
+	        }
+	    }
+        finally {
+	        for (const [_, __, consumerStop] of consumers) {
+				consumerStop();
+			}
         }
     })();
 
     return function () {
-        const [iter, push] = createUnicastSubject();
-        consumers.push([iter, push]);
+        const [iter, push, stop] = createUnicastSubject();
+        consumers.push([iter, push, stop]);
         return iter;
     };
 }
