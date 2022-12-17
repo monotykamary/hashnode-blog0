@@ -308,6 +308,7 @@ function multicast(asyncGenerator) {
     const consumers = [];
     (async () => {
 	    try {
+            // share & consume the generator + push out to consumers
 		    for await (const item of asyncGenerator) {
 	            for (const [_, consumerPush] of consumers) {
 	                consumerPush(item);
@@ -315,6 +316,7 @@ function multicast(asyncGenerator) {
 	        }
 	    }
         finally {
+            // "unsubscribe" consumers when the for..await loop resolves
 	        for (const [_, __, consumerStop] of consumers) {
 				consumerStop();
 			}
