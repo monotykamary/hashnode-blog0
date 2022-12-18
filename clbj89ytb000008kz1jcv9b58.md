@@ -343,13 +343,13 @@ const createReducerStore = (reducer, initialState) => {
   const [stateIter, statePush, stateStop] = createUnicastSubject();
   const [actionIter, actionPush, actionStop] = createUnicastSubject();
 
-  const multicastedStateIter = multicast(stateIter);
-  const multicastedActionIter = multicast(actionIter);
+  const multicastedStateSubject = multicast(stateIter);
+  const multicastedActionSubject = multicast(actionIter);
 
   let state = initialState;
 
   (async () => {
-    const [iter] = multicastedActionIter();
+    const [iter] = multicastedActionSubject();
     for await (const action of iter) {
       state = reducer(state, action);
       statePush(state);
@@ -368,8 +368,8 @@ const createReducerStore = (reducer, initialState) => {
   return [
     currentState,
     actionPush,
-    multicastedStateIter,
-    multicastedActionIter,
+    multicastedStateSubject,
+    multicastedActionSubject,
     stop
   ];
 };
@@ -392,7 +392,7 @@ const valueEl = document.getElementById("value");
 
 (async () => {
   valueEl.innerHTML = counterState().value.toString();
-  const [iter] = counterIter();
+  const [iter] = counterSubject();
   for await (const item of iter) {
     if (item.type === "VALUE") {
       valueEl.innerHTML = item.value.toString();
@@ -402,7 +402,7 @@ const valueEl = document.getElementById("value");
 })();
 
 (async () => {
-  const [iter] = counterIter();
+  const [iter] = counterSubject();
   for await (const item of iter) {
     if (item.type === "VALUE") {
       console.log(item.value, 2);
@@ -411,7 +411,7 @@ const valueEl = document.getElementById("value");
 })();
 
 (async () => {
-  const [iter] = counterActionIter();
+  const [iter] = counterActionSubject();
   for await (const item of iter) {
     console.log(item.type);
   }
