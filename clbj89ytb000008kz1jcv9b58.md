@@ -326,7 +326,7 @@ function multicast(asyncGenerator) {
     return function () {
         const [iter, push, stop] = createUnicastSubject();
         consumers.push([iter, push, stop]);
-        return iter;
+        return [iter, push, stop];
     };
 }
 
@@ -349,7 +349,8 @@ const createReducerStore = (reducer, initialState) => {
   let state = initialState;
 
   (async () => {
-    for await (const action of multicastedActionIter()) {
+    const [iter] = multicastedActionIter();
+    for await (const action of iter) {
       state = reducer(state, action);
       statePush(state);
     }
@@ -391,7 +392,8 @@ const valueEl = document.getElementById("value");
 
 (async () => {
   valueEl.innerHTML = counterState().value.toString();
-  for await (const item of counterIter()) { // called as a function
+  const [iter] = counterIter();
+  for await (const item of iter) {
     if (item.type === "VALUE") {
       valueEl.innerHTML = item.value.toString();
       console.log(item.value);
@@ -400,7 +402,8 @@ const valueEl = document.getElementById("value");
 })();
 
 (async () => {
-  for await (const item of counterIter()) { // called as a function
+  const [iter] = counterIter();
+  for await (const item of iter) {
     if (item.type === "VALUE") {
       console.log(item.value, 2);
     }
@@ -408,7 +411,8 @@ const valueEl = document.getElementById("value");
 })();
 
 (async () => {
-  for await (const item of counterActionIter()) { // called as a function
+  const [iter] = counterActionIter();
+  for await (const item of iter) {
     console.log(item.type);
   }
 })();
