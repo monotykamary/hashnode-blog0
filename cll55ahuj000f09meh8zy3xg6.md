@@ -145,7 +145,7 @@ The same happens for `Cat`, but with different results, based on our implementat
 
 Yes, this kind of polymorphism is completely possible in TypeScript with the power of proxies. We essentially need:
 
-* One dispatcher and one implementer
+* One protocol dispatcher and one protocol implementer
     
 * A way to determine algebraic data types (ADTs); for our case, we'll use an object that defines a `type` property
     
@@ -154,7 +154,7 @@ Yes, this kind of polymorphism is completely possible in TypeScript with the pow
 * A way to arbitrarily define methods by a type (here is where our proxies come in)
     
 
-Below is an implementation that does all of that:
+Below is an implementation that does all of that. There's a lot going on that deserves its own article, but the idea will become clear towards the end of this post.
 
 ```typescript
 type ConstructorName<T> = T extends Object ? T['constructor']['name'] : keyof any
@@ -209,7 +209,7 @@ function createProtocol(): any {
 
 ### Recreating the `Animal` Protocol
 
-We'll use our `createDataType` that we made from a previous post: [A neat way to write algebraic data types in TypeScript using Proxies](https://monotykamary.hashnode.dev/a-neat-way-to-write-algebraic-data-types-in-typescript-using-proxies). We will use it to simplify composing our data types create our `Dog` and `Cat` constructors and implement our `Animal` protocol similar to the above examples:
+We'll use our `createDataType` that we made from a previous post: [A neat way to write algebraic data types in TypeScript using Proxies](https://monotykamary.hashnode.dev/a-neat-way-to-write-algebraic-data-types-in-typescript-using-proxies). We will use it to simplify composing our data types and create our `Dog` and `Cat` constructors and implement our `Animal` protocol similar to the above examples:
 
 ```typescript
 // compose our Dog and Cat constructors
@@ -257,7 +257,7 @@ implementAnimal.Cat = {
 };
 ```
 
-We can then call the `Animal.describe` function like in Elixir, and we should expect the same result.
+We can then dispatch the `Animal.describe` function like in Elixir, and we should expect the same result.
 
 ```typescript
 const buster = Dog({ name: 'Buster' });
@@ -279,7 +279,7 @@ It says "..." when its friends arrive.
 */
 ```
 
-We've essentially created something extremely similar to Elixir's protocol. This simple example might not be enough to give us an idea of how powerful protocols are as a method for polymorphism. We have to implement the `Enumerable` protocol.
+We have essentially created something extremely similar to Elixir's protocol. This simple example might not be enough to give us an idea of how powerful protocols are as a method for polymorphism. We have to go big.
 
 ### Mimicking the `Enumerable` Protocol
 
@@ -307,7 +307,7 @@ const [Enum, implementEnum] = createProtocol<Enumerable, {
 }>();
 ```
 
-Let's first define how our `map` function will be composed. We will use `implementEnum._Protocol` to implement our other functions based on the four functions each data type is required to implement:
+Let's first define how our `map` function will be composed. We will use `implementEnum._Protocol` to implement our dispatch functions based on the four functions each data type is required to implement:
 
 ```typescript
 implementEnum._Protocol = {
@@ -321,9 +321,9 @@ implementEnum._Protocol = {
 }
 ```
 
-*For this case, we'll assume any output from other functions in the protocol will return an* ***array****.*
+*For this case, we'll assume any output from other functions in the protocol will return an* ***array***.
 
-Let's implement the `Enumerable` protocol on JavaScript's native `Array` type. We will use the `$` symbol to differentiate between object defined data types and native data types:
+Let's implement the `Enumerable` protocol on JavaScript's native `Array` type. We will use the `$` symbol to differentiate between object-defined data types and native data types:
 
 ```typescript
 implementEnum.$Array = {
@@ -369,7 +369,7 @@ const Cons = (head: number, tail: ListType) => List.Cons({ head, tail });
 const Nil = List.Nil();
 ```
 
-1. Then we'll define our four functions for our `ListType`. Each implemented function will use recursion to achieve BFS traversal for our linked-list:
+1. Then we'll define our four functions for our `ListType`. As from our `map` dispatch function, the secret sauce lies in our `reduce` implementation. Each of our implemented function will use recursion to do BFS traversal for our linked-list:
     
 
 ```typescript
