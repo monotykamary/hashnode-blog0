@@ -295,7 +295,7 @@ On top of the four functions we'll define as mandatory for the implementation, w
 
 ```typescript
 // define a common `Enumerable` type so that we can reference the type inside our implemented functions
-type Enumerable = List | any[]
+type Enumerable = any[]
 const [Enum, implementEnum] = createProtocol<Enumerable, {
   // we'll make it mandatory to implement the four required functions
   reduce<A>(value: Enumerable, acc: A, fn: (item: any, acc: A) => A): A
@@ -373,6 +373,9 @@ const Nil = List.Nil();
     
 
 ```typescript
+// update our Enumerable type to include our ListType data type
+type Enumerable = ListType | any[]
+
 implementEnum.Cons = {
   reduce: (list: ListType, acc, fn) => {
     const traverse = (list: ListType) => {
