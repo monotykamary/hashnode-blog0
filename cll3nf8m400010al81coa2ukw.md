@@ -5,6 +5,7 @@ seoDescription: "Optimize TypeScript with Proxies in React reducers for less boi
 datePublished: Wed Aug 09 2023 11:30:15 GMT+0000 (Coordinated Universal Time)
 cuid: cll3nf8m400010al81coa2ukw
 slug: a-neat-way-to-write-algebraic-data-types-in-typescript-using-proxies
+cover: https://cdn.hashnode.com/res/hashnode/image/stock/unsplash/2JIvboGLeho/upload/080eb426ff29b36e20c63af1b02b6c51.jpeg
 tags: javascript, typescript, functional-programming, proxies, data-types
 
 ---
